@@ -1,0 +1,7 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE DATASOURCE DF bv_sf_account
+    ROUTE LOCAL 'LocalConnection' '${databases.denodo_training2.datasources.df.bv_sf_account.ROUTE.LOCAL.PATH}' FILENAMEPATTERN = 'account.csv'
+    COLUMNDELIMITER = ','
+    ENDOFLINEDELIMITER = '\n'
+    HEADER = TRUE;
+
