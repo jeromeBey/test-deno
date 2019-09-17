@@ -37,7 +37,7 @@ class Incidents implements RestApiController {
 	RestApiResponse doHandle(HttpServletRequest request, RestApiResponseBuilder responseBuilder, RestAPIContext context) {
 		try {
 			
-			String jwtHeader = request.getHeader("X-JWT-Assertion")
+			String jwtHeader = request.getHeader("x-m3-requester-id")
 			LOGGER.fine(jwtHeader)
 			if (jwtHeader == null) {
 				LOGGER.severe(userNorFoundException.getMessage())
