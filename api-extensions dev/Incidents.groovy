@@ -88,11 +88,17 @@ class Incidents implements RestApiController {
 
 			final SearchResult<ProcessDeploymentInfo> deploymentInfoResults = processAPI.searchProcessDeploymentInfos(searchOptions);
 
+			
 			ProcessInstance processInstance = processAPI.startProcessWithInputs(userId,deploymentInfoResults.result.get(0).processId, instantiationInputs)
 
-			def result = processInstance.getId().toString()
-			return buildResponse(responseBuilder, HttpServletResponse.SC_OK, new JsonBuilder(result).toString())
-			
+            def caseId = processInstance.getId().toString()
+            def builder = new JsonBuilder()
+            builder.incident {
+                id caseId
+            }
+            
+            return buildResponse(responseBuilder, HttpServletResponse.SC_OK, builder.toString())
+
 		}
 		catch (UserNotFoundException userNorFoundException) {
 			LOGGER.severe(userNorFoundException.getMessage())
