@@ -37,10 +37,10 @@ class Incidents implements RestApiController {
 	RestApiResponse doHandle(HttpServletRequest request, RestApiResponseBuilder responseBuilder, RestAPIContext context) {
 		try {
 			
+			LOGGER.fine("API BEGIN")
 			String jwtHeader = request.getHeader("x-m3-requester-id")
 			LOGGER.fine(jwtHeader)
 			if (jwtHeader == null) {
-				LOGGER.severe(userNorFoundException.getMessage())
 				return buildResponse(responseBuilder, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"""{"error" : "invalid JWT"}""")
 			}
 
@@ -64,7 +64,9 @@ class Incidents implements RestApiController {
 			IdentityAPI identityAPI = context.getApiClient().getIdentityAPI()
 			SearchResult<User> searchUsers = identityAPI.searchUsers(new SearchOptionsBuilder(0, 1000000).done());
 			for (final User user : searchUsers.getResult()) {
-				if (user==null){ exit }
+				if (user==null){ 
+					Exit
+				}
 				UserWithContactData proUser = identityAPI.getUserWithProfessionalDetails(user.getId())
 				ContactData cd = proUser.getContactData()
 				if (cd!=null){ 
@@ -75,6 +77,10 @@ class Incidents implements RestApiController {
 				}
 			}
 			
+			//UserId is not found
+			if (userId.equals(null)){
+				return buildResponse(responseBuilder, HttpServletResponse.SC_UNAUTHORIZED,"""{"error" : "Invalid email"}""")
+			}
 			
 			Map<String,Serializable> incidentInput =	incidentJSON.toMap()
 			Map<String,Serializable> typeIncidentInput = typeIncidentJSON.toMap()
